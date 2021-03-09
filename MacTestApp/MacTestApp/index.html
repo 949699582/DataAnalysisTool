@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+            <title>第一个 ECharts 实例</title>
+            <!-- 引入 echarts.js -->
+            <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+            <!-- 先引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入 http-vue-loader -->
+    <script src="https://unpkg.com/http-vue-loader"></script>
+    </head>
+    <body>
+        <div id="app">
+        <span id="label2">111</span>
+        <!--为echarts准备一个容器，画图就画在里面-->
+        <div id="box" style="width: 600px;height: 550px;"></div>
+<!--        <button type="button" @click="drawLine()">Click Me!</button>-->
+        
+    </div>
+        
+        <script>
+            
+            // 使用httpVueLoader
+    Vue.use(httpVueLoader);
+
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                    arrayData: [10,20,30,40,50,60,70],
+                    ddd:[]
+
+            }
+        },
+        created:function(){
+            window.getDataFromNative = this.getDataFromNative;
+//          var self = this
+//          self.$set(self.$data, 'ddd', ['4.3207','3.30635','5.30635','4.30635','2.30635','3.34635','2.39635'])
+        },
+        mounted:function(){
+            
+            var result = eval('(' + this.ddd + ')');
+            console.log(result)
+            
+        },
+        methods:{
+            
+            getDataFromNative(params) {
+            
+            var self = this
+            
+            var result = eval('(' + params + ')');
+            self.$set(self.$data, 'ddd', result)
+
+            document.getElementById("label2").innerHTML = "oc按钮调用了js方法 - 参数："+ this.ddd;
+            
+            this.drawLine()
+            
+        },
+        oc2js2(a) {
+            
+            this.setData()
+            document.getElementById("label2").innerHTML = "oc按钮调用了js方法 - 参数："+a;
+            
+        },
+            
+        drawLine(){
+                
+        console.log(this.ddd)
+        //初始化ehcharts实例
+        var myChart=echarts.init(document.getElementById("box"));
+        //指定图表的配置项和数据
+        var option={
+            //标题
+            title:{
+                text:'测试站点折线图'
+            },
+            //工具箱
+            //保存图片
+            toolbox: {
+                    show: true,
+                          feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        }, //区域缩放，区域缩放还原
+                                dataView: {
+                            readOnly: false
+                        }, //数据视图
+                                magicType: {
+                            type: ['line', 'bar']
+                        },
+                          //切换为折线图，切换为柱状图
+                                restore: {},
+                          //还原
+                        //                                saveAsImage: {}   //保存为图片
+                              
+                    }
+                },
+            //图例-每一条数据的名字叫销量
+            legend:{
+                data:['测试站点']
+            },
+            //x轴
+            xAxis:{
+                data:["1","2","3","4","5","6","7","8","9","10"]
+            },
+            //y轴没有显式设置，根据值自动生成y轴
+            yAxis:{},
+            //数据-data是最终要显示的数据
+            series:[{
+                    name:'测试站点',
+                    type:'line',
+                    lineStyle : {          // 直线指示器样式设置
+                    color: '#48b',
+                    width: 2,
+                    type: 'solid'
+                    },
+                    data:this.ddd
+                   }
+                    ]
+        };
+        //使用刚刚指定的配置项和数据项显示图表
+        myChart.setOption(option);
+            },
+        }
+        
+    })
+            
+
+        
+        
+            </script>
+    </body>
+</html>
